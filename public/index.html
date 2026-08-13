@@ -2673,7 +2673,18 @@ function changeSort(mode) {
 
 function selectTopic(topicId) {
 
-    currentTopic = topicId;
+    if (topicId === "all") {
+        currentTopic = "all";
+    } else {
+        const id = Number(topicId);
+
+        if (!Number.isInteger(id)) {
+            console.error("잘못된 topicId:", topicId);
+            return;
+        }
+
+        currentTopic = id;
+    }
 
     searchMode = null;
 
