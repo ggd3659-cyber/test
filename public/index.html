@@ -1061,8 +1061,8 @@ function renderHomeOnly() {
 
     document.getElementById("app").innerHTML = html;
 }
-function renderHome() {
-    loadPostsFromServer();
+async function renderHome() {
+    await loadPostsFromServer();
 }
 /* =========================================================
    COMPOSER
