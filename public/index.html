@@ -916,9 +916,7 @@ function renderHomeOnly() {
             (b.visitors || 0) - (a.visitors || 0)
         );
     }
-function renderHome() {
-    loadPostsFromServer();
-}
+
 
     let html = `
         <main>
@@ -1032,7 +1030,9 @@ function renderHome() {
 
     document.getElementById("app").innerHTML = html;
 }
-
+function renderHome() {
+    loadPostsFromServer();
+}
 /* =========================================================
    COMPOSER
 ========================================================= */
