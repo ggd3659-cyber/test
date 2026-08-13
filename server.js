@@ -1906,6 +1906,80 @@ async function startServer() {
         await initializeDatabase();
 
         await pool.query("SELECT 1");
+app.get("/api/test-insert", async (req, res) => {
+    try {
+        const userResult = await query(`
+            SELECT id
+            FROM users
+            ORDER BY id ASC
+            LIMIT 1
+        `);
+
+        const topicResult = await query(`
+            SELECT id
+            FROM topics
+            WHERE active = 1
+            ORDER BY id ASC
+            LIMIT 1
+        `);
+
+        if (userResult.rows.length === 0) {
+            return res.status(400).json({
+                success: false,
+                error: "users 테이블에 사용자가 없습니다."
+            });
+        }
+
+        if (topicResult.rows.length === 0) {
+            return res.status(400).json({
+                success: false,
+                error: "topics 테이블에 주제가 없습니다."
+            });
+        }
+
+        const userId = userResult.rows[0].id;
+        const topicId = topicResult.rows[0].id;
+        const timestamp = now();
+
+        const result = await query(`
+            INSERT INTO posts
+            (
+                user_id,
+                topic_id,
+                text,
+                image_path,
+                video_path,
+                visitors,
+                created_at,
+                updated_at
+            )
+            VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
+            RETURNING id
+        `, [
+            userId,
+            topicId,
+            "PostgreSQL 테스트 게시물",
+            null,
+            null,
+            0,
+            timestamp,
+            timestamp
+        ]);
+
+        res.json({
+            success: true,
+            postId: result.rows[0].id
+        });
+
+    } catch (error) {
+        console.error("TEST INSERT ERROR:", error);
+
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
 app.get("/api/test-posts", async (req, res) => {
     try {
         const result = await pool.query(`
