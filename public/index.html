@@ -1,0 +1,2853 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>BlueTalk korea</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    :root {
+        --blue: #1677ff;
+        --blue-dark: #075ed1;
+        --blue-light: #eaf3ff;
+        --pink: #ff4f91;
+        --black: #000000;
+        --white: #ffffff;
+        --gray: #777;
+        --border: #d7d7d7;
+        --danger: #e53935;
+    }
+
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        background: var(--white);
+        color: var(--black);
+        font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+        font-weight: 700;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+        font-family: inherit;
+        font-weight: 700;
+    }
+
+    button {
+        cursor: pointer;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    header {
+        width: 100%;
+        background: var(--blue);
+        color: white;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 3px 12px rgba(0,0,0,.15);
+    }
+
+    .header-inner {
+        max-width: 1250px;
+        margin: auto;
+        min-height: 70px;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .logo {
+        font-size: 25px;
+        font-weight: 900;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .search-box {
+        flex: 1;
+        position: relative;
+    }
+
+    .search-box input {
+        width: 100%;
+        height: 42px;
+        border: 0;
+        border-radius: 22px;
+        padding: 0 18px;
+        outline: none;
+        color: black;
+        background: white;
+    }
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .header-btn {
+        background: white;
+        color: var(--blue);
+        border: none;
+        border-radius: 10px;
+        padding: 10px 13px;
+    }
+
+    /* =========================
+       LAYOUT
+    ========================= */
+
+    main {
+        max-width: 1250px;
+        margin: auto;
+        padding: 25px 18px 80px;
+    }
+
+    .page-grid {
+        display: grid;
+        grid-template-columns: 240px minmax(0, 1fr) 240px;
+        gap: 20px;
+    }
+
+    .card {
+        background: white;
+        border: 2px solid var(--blue);
+        border-radius: 15px;
+        padding: 18px;
+        margin-bottom: 18px;
+    }
+
+    .blue-card {
+        background: var(--blue);
+        color: white;
+        border-color: var(--blue);
+    }
+
+    .section-title {
+        margin-top: 0;
+        margin-bottom: 14px;
+        font-size: 20px;
+    }
+
+    /* =========================
+       TOPICS
+    ========================= */
+
+    .topic-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .topic-button {
+        width: 100%;
+        border: 2px solid var(--blue);
+        background: white;
+        color: black;
+        padding: 11px;
+        border-radius: 10px;
+        text-align: left;
+    }
+
+    .topic-button:hover,
+    .topic-button.active {
+        background: var(--blue);
+        color: white;
+    }
+
+    /* =========================
+       PROFILE
+    ========================= */
+
+    .profile-circle {
+        width: 76px;
+        height: 76px;
+        border-radius: 50%;
+        background: var(--blue);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 10px;
+        font-size: 28px;
+        border: 4px solid white;
+        outline: 3px solid var(--blue);
+    }
+
+    .profile-center {
+        text-align: center;
+    }
+
+    .profile-name {
+        font-size: 18px;
+        margin-bottom: 3px;
+    }
+
+    .profile-tag {
+        color: var(--gray);
+        margin-bottom: 15px;
+    }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 17px;
+        color: var(--blue);
+    }
+
+    .stat-label {
+        font-size: 11px;
+        color: var(--gray);
+    }
+
+    /* =========================
+       COMPOSER
+    ========================= */
+
+    textarea,
+    input,
+    select {
+        border: 2px solid var(--blue);
+        border-radius: 10px;
+        padding: 12px;
+        outline: none;
+        background: white;
+        color: black;
+    }
+
+    textarea {
+        width: 100%;
+        resize: vertical;
+        min-height: 110px;
+    }
+
+    input {
+        width: 100%;
+    }
+
+    .form-group {
+        margin-bottom: 12px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .primary-btn {
+        border: none;
+        border-radius: 10px;
+        background: var(--blue);
+        color: white;
+        padding: 11px 16px;
+    }
+
+    .primary-btn:hover {
+        background: var(--blue-dark);
+    }
+
+    .outline-btn {
+        border: 2px solid var(--blue);
+        border-radius: 10px;
+        background: white;
+        color: var(--blue);
+        padding: 9px 14px;
+    }
+
+    .danger-btn {
+        border: none;
+        border-radius: 10px;
+        background: var(--danger);
+        color: white;
+        padding: 9px 14px;
+    }
+
+    .composer-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    /* =========================
+       POSTS
+    ========================= */
+
+    .post {
+        border: 2px solid var(--blue);
+        border-radius: 15px;
+        padding: 18px;
+        margin-bottom: 18px;
+        background: white;
+    }
+
+    .post-header {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .author {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .small-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--blue);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .post-author-name {
+        font-size: 16px;
+    }
+
+    .post-author-tag {
+        font-size: 12px;
+        color: var(--gray);
+    }
+
+    .manager-badge {
+        background: var(--blue);
+        color: white;
+        padding: 3px 7px;
+        border-radius: 6px;
+        font-size: 10px;
+        margin-left: 5px;
+    }
+
+    .post-time {
+        font-size: 11px;
+        color: var(--gray);
+    }
+
+    .post-content {
+        white-space: pre-wrap;
+        line-height: 1.7;
+        margin: 15px 0;
+    }
+
+    .post-media {
+        width: 100%;
+        max-height: 550px;
+        object-fit: contain;
+        background: #f5f5f5;
+        border-radius: 10px;
+        margin-top: 10px;
+    }
+
+    .topic-label {
+        display: inline-block;
+        color: var(--blue);
+        border: 2px solid var(--blue);
+        border-radius: 20px;
+        padding: 4px 10px;
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+
+    .post-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        border-top: 2px solid #eee;
+        padding-top: 12px;
+    }
+
+    .action-btn {
+        border: 2px solid var(--blue);
+        background: white;
+        color: black;
+        border-radius: 10px;
+        padding: 8px 12px;
+    }
+
+    .action-btn:hover {
+        background: var(--blue-light);
+    }
+
+    .heart {
+        color: black;
+        transition: .2s;
+    }
+
+    .heart.liked {
+        color: var(--pink);
+        border-color: var(--pink);
+    }
+
+    .heart-icon {
+        color: black;
+    }
+
+    .heart.liked .heart-icon {
+        color: var(--pink);
+    }
+
+    /* =========================
+       COMMENTS
+    ========================= */
+
+    .comments {
+        margin-top: 15px;
+        padding-top: 12px;
+        border-top: 2px solid #eee;
+    }
+
+    .comment {
+        background: #f7f7f7;
+        border-radius: 10px;
+        padding: 10px;
+        margin-bottom: 8px;
+    }
+
+    .comment.pinned {
+        border: 2px solid var(--blue);
+        background: var(--blue-light);
+    }
+
+    .comment-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .comment-content {
+        margin: 6px 0;
+        line-height: 1.5;
+        white-space: pre-wrap;
+    }
+
+    .comment-actions {
+        display: flex;
+        gap: 6px;
+    }
+
+    .comment-input {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+    }
+
+    /* =========================
+       SORT
+    ========================= */
+
+    .sort-bar {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 18px;
+        overflow-x: auto;
+    }
+
+    .sort-btn {
+        white-space: nowrap;
+        border: 2px solid var(--blue);
+        color: var(--blue);
+        background: white;
+        border-radius: 10px;
+        padding: 9px 13px;
+    }
+
+    .sort-btn.active {
+        color: white;
+        background: var(--blue);
+    }
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    .modal-bg {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 15px;
+        z-index: 2000;
+    }
+
+    .modal {
+        width: 100%;
+        max-width: 480px;
+        max-height: 90vh;
+        overflow-y: auto;
+        background: white;
+        border: 3px solid var(--blue);
+        border-radius: 15px;
+        padding: 22px;
+    }
+
+    .modal h2 {
+        margin-top: 0;
+    }
+
+    .modal-close {
+        float: right;
+        border: none;
+        background: transparent;
+        font-size: 24px;
+    }
+
+    /* =========================
+       LOGIN
+    ========================= */
+
+    .auth-page {
+        min-height: calc(100vh - 70px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 25px;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 430px;
+        border: 3px solid var(--blue);
+        border-radius: 18px;
+        padding: 28px;
+    }
+
+    .auth-logo {
+        text-align: center;
+        color: var(--blue);
+        font-size: 32px;
+        margin-bottom: 25px;
+    }
+
+    .auth-switch {
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .link {
+        color: var(--blue);
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    /* =========================
+       ADMIN
+    ========================= */
+
+    .admin-panel {
+        border: 3px solid var(--blue);
+        border-radius: 15px;
+        padding: 18px;
+        margin-bottom: 20px;
+    }
+
+    .admin-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .admin-row input,
+    .admin-row select {
+        flex: 1;
+    }
+
+    .member-row {
+        border: 2px solid #eee;
+        border-radius: 10px;
+        padding: 12px;
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 1050px) {
+        .page-grid {
+            grid-template-columns: 190px minmax(0, 1fr);
+        }
+
+        .right-sidebar {
+            display: none;
+        }
+    }
+
+    @media (max-width: 700px) {
+        .header-inner {
+            flex-wrap: wrap;
+            padding: 10px;
+        }
+
+        .logo {
+            width: 100%;
+        }
+
+        .search-box {
+            order: 3;
+            flex-basis: 100%;
+        }
+
+        .header-actions {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+
+        .page-grid {
+            display: block;
+        }
+
+        .left-sidebar {
+            display: none;
+        }
+
+        main {
+            padding: 15px 10px 50px;
+        }
+
+        .post {
+            padding: 13px;
+        }
+
+        .post-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .action-btn {
+            width: 100%;
+        }
+
+        .admin-row {
+            flex-direction: column;
+        }
+
+        .member-row {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+
+        <div class="logo" onclick="goHome()" id="siteLogo">
+            BlueTalk
+        </div>
+
+        <div class="search-box">
+            <input
+                type="search"
+                id="searchInput"
+                placeholder="@태그이름으로 사람 검색"
+                onkeydown="handleSearch(event)"
+            >
+        </div>
+
+        <div class="header-actions">
+            <button class="header-btn" onclick="showProfile()" id="profileBtn">
+                프로필
+            </button>
+
+            <button class="header-btn" onclick="openLogin()" id="loginBtn">
+                로그인
+            </button>
+
+            <button class="header-btn hidden" onclick="logout()" id="logoutBtn">
+                로그아웃
+            </button>
+        </div>
+    </div>
+</header>
+
+<div id="app"></div>
+
+<!-- =========================
+     MODAL
+========================= -->
+
+<div id="modalBg" class="modal-bg hidden">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <div id="modalContent"></div>
+    </div>
+</div>
+
+<script>
+/* =========================================================
+   DATABASE
+========================================================= */
+
+const DB_KEY = "bluetalk_database_v1";
+
+const defaultDB = {
+    settings: {
+        siteName: "BlueTalk"
+    },
+
+    topics: [
+        {
+            id: "general",
+            name: "자유 대화",
+            active: true
+        },
+        {
+            id: "question",
+            name: "질문",
+            active: true
+        },
+        {
+            id: "daily",
+            name: "일상",
+            active: true
+        }
+    ],
+
+    users: [
+        {
+            id: "manager-001",
+            name: "관리자",
+            tag: "@admin",
+            password: "admin123",
+            role: "manager",
+            followers: [],
+            totalVisitors: 0,
+            totalHearts: 0,
+            banned: false,
+            createdAt: Date.now()
+        }
+    ],
+
+    posts: []
+};
+
+let db = loadDB();
+let currentUserId = localStorage.getItem("bluetalk_current_user");
+let currentTopic = "all";
+let sortMode = "latest";
+let searchMode = null;
+
+/* =========================================================
+   DATABASE FUNCTIONS
+========================================================= */
+
+function loadDB() {
+    const saved = localStorage.getItem(DB_KEY);
+
+    if (!saved) {
+        localStorage.setItem(DB_KEY, JSON.stringify(defaultDB));
+        return JSON.parse(JSON.stringify(defaultDB));
+    }
+
+    try {
+        return JSON.parse(saved);
+    } catch {
+        return JSON.parse(JSON.stringify(defaultDB));
+    }
+}
+
+function saveDB() {
+    localStorage.setItem(DB_KEY, JSON.stringify(db));
+}
+
+function getCurrentUser() {
+    return db.users.find(u => u.id === currentUserId && !u.banned);
+}
+
+function isManager() {
+    return getCurrentUser()?.role === "manager";
+}
+
+function makeId(prefix = "id") {
+    return prefix + "-" +
+        Date.now().toString(36) +
+        "-" +
+        Math.random().toString(36).substring(2, 8);
+}
+
+function escapeHTML(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+/* =========================================================
+   INITIAL UI
+========================================================= */
+
+function render() {
+    document.getElementById("siteLogo").textContent =
+        db.settings.siteName;
+
+    const user = getCurrentUser();
+
+    document.getElementById("loginBtn")
+        .classList.toggle("hidden", !!user);
+
+    document.getElementById("logoutBtn")
+        .classList.toggle("hidden", !user);
+
+    document.getElementById("profileBtn")
+        .textContent = user ? user.name : "프로필";
+
+    if (searchMode) {
+        renderSearchResults();
+        return;
+    }
+
+    renderHome();
+}
+
+function renderHome() {
+
+    const user = getCurrentUser();
+
+    let visibleTopics = db.topics.filter(t => t.active);
+
+    let posts = [...db.posts];
+
+    if (currentTopic !== "all") {
+        posts = posts.filter(p => p.topicId === currentTopic);
+    }
+
+    if (sortMode === "latest") {
+        posts.sort((a,b) => b.createdAt - a.createdAt);
+    }
+
+    if (sortMode === "hearts") {
+        posts.sort((a,b) =>
+            getPostHearts(b) - getPostHearts(a)
+        );
+    }
+
+    if (sortMode === "visitors") {
+        posts.sort((a,b) =>
+            (b.visitors || 0) - (a.visitors || 0)
+        );
+    }
+
+    let html = `
+        <main>
+
+            <div class="page-grid">
+
+                <aside class="left-sidebar">
+
+                    <div class="card">
+
+                        <h3 class="section-title">
+                            대화 주제
+                        </h3>
+
+                        <div class="topic-list">
+
+                            <button
+                                class="topic-button ${currentTopic === "all" ? "active" : ""}"
+                                onclick="selectTopic('all')">
+                                전체 게시물
+                            </button>
+
+                            ${visibleTopics.map(topic => `
+                                <button
+                                    class="topic-button ${currentTopic === topic.id ? "active" : ""}"
+                                    onclick="selectTopic('${topic.id}')">
+                                    ${escapeHTML(topic.name)}
+                                </button>
+                            `).join("")}
+
+                        </div>
+
+                    </div>
+
+                    ${isManager() ? renderAdminShortcut() : ""}
+
+                </aside>
+
+
+                <section>
+
+                    ${user ? renderComposer() : `
+                        <div class="card blue-card">
+                            <h2>BlueTalk에 오신 것을 환영합니다.</h2>
+                            <p>
+                                게시물을 작성하고 좋아요와 팔로우를 하려면 로그인해주세요.
+                            </p>
+
+                            <button
+                                class="header-btn"
+                                onclick="openLogin()">
+                                로그인
+                            </button>
+                        </div>
+                    `}
+
+                    <div class="sort-bar">
+
+                        <button
+                            class="sort-btn ${sortMode === "latest" ? "active" : ""}"
+                            onclick="changeSort('latest')">
+                            최신순
+                        </button>
+
+                        <button
+                            class="sort-btn ${sortMode === "hearts" ? "active" : ""}"
+                            onclick="changeSort('hearts')">
+                            하트순
+                        </button>
+
+                        <button
+                            class="sort-btn ${sortMode === "visitors" ? "active" : ""}"
+                            onclick="changeSort('visitors')">
+                            방문자순
+                        </button>
+
+                    </div>
+
+                    ${posts.length
+                        ? posts.map(renderPost).join("")
+                        : `
+                            <div class="card">
+                                아직 게시물이 없습니다.
+                            </div>
+                        `
+                    }
+
+                </section>
+
+
+                <aside class="right-sidebar">
+
+                    ${user ? renderMyProfileCard(user) : renderLoginCard()}
+
+                    <div class="card">
+
+                        <h3 class="section-title">
+                            인기 통계
+                        </h3>
+
+                        ${getTopUsers()}
+
+                    </div>
+
+                </aside>
+
+            </div>
+
+        </main>
+    `;
+
+    document.getElementById("app").innerHTML = html;
+}
+
+/* =========================================================
+   COMPOSER
+========================================================= */
+
+function renderComposer() {
+
+    const topics = db.topics.filter(t => t.active);
+
+    return `
+        <div class="card">
+
+            <h2 class="section-title">
+                새 게시물 작성
+            </h2>
+
+            <div class="form-group">
+
+                <select id="postTopic">
+
+                    ${topics.map(t => `
+                        <option value="${t.id}">
+                            ${escapeHTML(t.name)}
+                        </option>
+                    `).join("")}
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <textarea
+                    id="postText"
+                    placeholder="어떤 것에 대해 이야기해볼까요?"
+                ></textarea>
+
+            </div>
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    사진
+                </label>
+
+                <input
+                    type="file"
+                    id="postImage"
+                    accept="image/*"
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    영상 / 클립
+                </label>
+
+                <input
+                    type="file"
+                    id="postVideo"
+                    accept="video/*"
+                >
+
+            </div>
+
+            <div class="composer-actions">
+
+                <small>
+                    사진과 영상은 선택사항입니다.
+                </small>
+
+                <button
+                    class="primary-btn"
+                    onclick="createPost()">
+                    게시하기
+                </button>
+
+            </div>
+
+        </div>
+    `;
+}
+
+/* =========================================================
+   POST
+========================================================= */
+
+function renderPost(post) {
+
+    const author = db.users.find(u => u.id === post.authorId);
+
+    if (!author || author.banned) return "";
+
+    const user = getCurrentUser();
+
+    const topic = db.topics.find(t => t.id === post.topicId);
+
+    const liked =
+        user &&
+        (post.likedBy || []).includes(user.id);
+
+    const following =
+        user &&
+        (author.followers || []).includes(user.id);
+
+    return `
+        <article class="post">
+
+            <div class="post-header">
+
+                <div class="author">
+
+                    <div class="small-avatar">
+                        ${escapeHTML(
+                            (author.name || "?").charAt(0)
+                        )}
+                    </div>
+
+                    <div>
+
+                        <div class="post-author-name">
+
+                            ${escapeHTML(author.name)}
+
+                            ${author.role === "manager"
+                                ? `<span class="manager-badge">매니저</span>`
+                                : ""
+                            }
+
+                        </div>
+
+                        <div class="post-author-tag">
+                            ${escapeHTML(author.tag)}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="post-time">
+                    ${formatDate(post.createdAt)}
+                </div>
+
+            </div>
+
+            <div style="margin-top:12px">
+
+                ${topic
+                    ? `<span class="topic-label">
+                        ${escapeHTML(topic.name)}
+                       </span>`
+                    : ""
+                }
+
+            </div>
+
+            <div class="post-content">
+                ${escapeHTML(post.text)}
+            </div>
+
+            ${
+                post.image
+                ? `
+                    <img
+                        class="post-media"
+                        src="${post.image}"
+                        alt="게시물 사진"
+                    >
+                `
+                : ""
+            }
+
+            ${
+                post.video
+                ? `
+                    <video
+                        class="post-media"
+                        src="${post.video}"
+                        controls>
+                    </video>
+                `
+                : ""
+            }
+
+            <div class="post-actions">
+
+                <button
+                    class="action-btn heart ${liked ? "liked" : ""}"
+                    onclick="togglePostLike('${post.id}')">
+
+                    <span class="heart-icon">♥</span>
+
+                    하트 ${getPostHearts(post)}
+
+                </button>
+
+                <button
+                    class="action-btn"
+                    onclick="followUser('${author.id}')">
+
+                    ${following ? "팔로우 취소" : "팔로우"}
+
+                </button>
+
+                <button
+                    class="action-btn"
+                    onclick="sharePost('${post.id}')">
+
+                    공유
+
+                </button>
+
+                <button
+                    class="action-btn"
+                    onclick="focusComment('${post.id}')">
+
+                    댓글 ${post.comments?.length || 0}
+
+                </button>
+
+                ${
+                    user &&
+                    (user.id === post.authorId || isManager())
+                    ? `
+                        <button
+                            class="action-btn"
+                            onclick="editPost('${post.id}')">
+                            수정
+                        </button>
+
+                        <button
+                            class="action-btn"
+                            onclick="deletePost('${post.id}')">
+                            삭제
+                        </button>
+                    `
+                    : ""
+                }
+
+            </div>
+
+            ${renderComments(post)}
+
+        </article>
+    `;
+}
+
+/* =========================================================
+   COMMENTS
+========================================================= */
+
+function renderComments(post) {
+
+    const user = getCurrentUser();
+
+    const comments = post.comments || [];
+
+    return `
+        <div
+            class="comments"
+            id="comments-${post.id}">
+
+            <strong>
+                댓글
+            </strong>
+
+            ${comments.map(comment => {
+
+                const author =
+                    db.users.find(u => u.id === comment.authorId);
+
+                if (!author) return "";
+
+                const liked =
+                    user &&
+                    (comment.likedBy || []).includes(user.id);
+
+                return `
+                    <div class="comment ${comment.pinned ? "pinned" : ""}">
+
+                        <div class="comment-top">
+
+                            <span>
+                                ${escapeHTML(author.name)}
+                                ${escapeHTML(author.tag)}
+                            </span>
+
+                            <small>
+                                ${formatDate(comment.createdAt)}
+                            </small>
+
+                        </div>
+
+                        ${
+                            comment.pinned
+                            ? `<small style="color:#1677ff">
+                                📌 고정된 댓글
+                               </small>`
+                            : ""
+                        }
+
+                        <div class="comment-content">
+                            ${escapeHTML(comment.text)}
+                        </div>
+
+                        <div class="comment-actions">
+
+                            <button
+                                class="action-btn heart ${liked ? "liked" : ""}"
+                                onclick="toggleCommentLike('${post.id}','${comment.id}')">
+
+                                <span class="heart-icon">♥</span>
+                                ${comment.likedBy?.length || 0}
+
+                            </button>
+
+                            ${
+                                isManager()
+                                ? `
+                                    <button
+                                        class="action-btn"
+                                        onclick="togglePinComment('${post.id}','${comment.id}')">
+
+                                        ${comment.pinned
+                                            ? "고정 해제"
+                                            : "댓글 고정"
+                                        }
+
+                                    </button>
+
+                                    <button
+                                        class="action-btn"
+                                        onclick="deleteComment('${post.id}','${comment.id}')">
+
+                                        삭제
+
+                                    </button>
+                                `
+                                : ""
+                            }
+
+                        </div>
+
+                    </div>
+                `;
+
+            }).join("")}
+
+
+            ${
+                user
+                ? `
+                    <div class="comment-input">
+
+                        <input
+                            id="comment-input-${post.id}"
+                            placeholder="댓글을 작성해주세요."
+                        >
+
+                        <button
+                            class="primary-btn"
+                            onclick="addComment('${post.id}')">
+                            등록
+                        </button>
+
+                    </div>
+                `
+                : `
+                    <small>
+                        댓글을 작성하려면 로그인해주세요.
+                    </small>
+                `
+            }
+
+        </div>
+    `;
+}
+
+function focusComment(postId) {
+
+    const input =
+        document.getElementById(`comment-input-${postId}`);
+
+    if (input) {
+        input.focus();
+    }
+}
+
+/* =========================================================
+   POST ACTIONS
+========================================================= */
+
+function createPost() {
+
+    const user = getCurrentUser();
+
+    if (!user) {
+        alert("로그인이 필요합니다.");
+        openLogin();
+        return;
+    }
+
+    const text =
+        document.getElementById("postText").value.trim();
+
+    const topicId =
+        document.getElementById("postTopic").value;
+
+    if (!text) {
+        alert("게시물 내용을 작성해주세요.");
+        return;
+    }
+
+    const imageFile =
+        document.getElementById("postImage").files[0];
+
+    const videoFile =
+        document.getElementById("postVideo").files[0];
+
+    const post = {
+        id: makeId("post"),
+        authorId: user.id,
+        topicId,
+        text,
+        image: null,
+        video: null,
+        likedBy: [],
+        comments: [],
+        visitors: 0,
+        createdAt: Date.now()
+    };
+
+    const files = [];
+
+    if (imageFile) {
+        files.push(
+            readFileAsDataURL(imageFile)
+                .then(data => post.image = data)
+        );
+    }
+
+    if (videoFile) {
+        files.push(
+            readFileAsDataURL(videoFile)
+                .then(data => post.video = data)
+        );
+    }
+
+    Promise.all(files).then(() => {
+
+        db.posts.push(post);
+
+        saveDB();
+
+        render();
+
+        alert("게시물이 작성되었습니다.");
+
+    });
+}
+
+function togglePostLike(postId) {
+
+    const user = getCurrentUser();
+
+    if (!user) {
+        alert("좋아요를 누르려면 로그인해주세요.");
+        openLogin();
+        return;
+    }
+
+    const post =
+        db.posts.find(p => p.id === postId);
+
+    if (!post) return;
+
+    post.likedBy = post.likedBy || [];
+
+    const index =
+        post.likedBy.indexOf(user.id);
+
+    if (index === -1) {
+        post.likedBy.push(user.id);
+    } else {
+        post.likedBy.splice(index, 1);
+    }
+
+    updateUserHeartTotals();
+
+    saveDB();
+
+    render();
+}
+
+function followUser(userId) {
+
+    const user = getCurrentUser();
+
+    if (!user) {
+        alert("팔로우하려면 로그인해주세요.");
+        openLogin();
+        return;
+    }
+
+    if (user.id === userId) {
+        alert("자기 자신은 팔로우할 수 없습니다.");
+        return;
+    }
+
+    const target =
+        db.users.find(u => u.id === userId);
+
+    if (!target) return;
+
+    target.followers = target.followers || [];
+
+    const index =
+        target.followers.indexOf(user.id);
+
+    if (index === -1) {
+        target.followers.push(user.id);
+    } else {
+        target.followers.splice(index, 1);
+    }
+
+    saveDB();
+    render();
+}
+
+function sharePost(postId) {
+
+    const user = getCurrentUser();
+
+    if (!user) {
+        alert("공유하려면 로그인해주세요.");
+        openLogin();
+        return;
+    }
+
+    const url =
+        location.href.split("#")[0] +
+        "#post-" +
+        postId;
+
+    if (navigator.share) {
+
+        navigator.share({
+            title: db.settings.siteName,
+            text: "BlueTalk 게시물",
+            url
+        }).catch(() => {});
+
+    } else {
+
+        navigator.clipboard.writeText(url)
+            .then(() => alert("게시물 링크가 복사되었습니다."));
+
+    }
+}
+
+function editPost(postId) {
+
+    const user = getCurrentUser();
+
+    const post =
+        db.posts.find(p => p.id === postId);
+
+    if (!post) return;
+
+    if (
+        !isManager() &&
+        post.authorId !== user?.id
+    ) {
+        alert("수정 권한이 없습니다.");
+        return;
+    }
+
+    openModal(`
+        <h2>게시물 수정</h2>
+
+        <textarea id="editPostText">${escapeHTML(post.text)}</textarea>
+
+        <br><br>
+
+        <button
+            class="primary-btn"
+            onclick="saveEditedPost('${post.id}')">
+            저장
+        </button>
+    `);
+}
+
+function saveEditedPost(postId) {
+
+    const post =
+        db.posts.find(p => p.id === postId);
+
+    if (!post) return;
+
+    const text =
+        document.getElementById("editPostText")
+            .value.trim();
+
+    if (!text) {
+        alert("내용을 입력해주세요.");
+        return;
+    }
+
+    post.text = text;
+
+    saveDB();
+
+    closeModal();
+
+    render();
+}
+
+function deletePost(postId) {
+
+    const user = getCurrentUser();
+
+    const post =
+        db.posts.find(p => p.id === postId);
+
+    if (!post) return;
+
+    if (
+        !isManager() &&
+        post.authorId !== user?.id
+    ) {
+        alert("삭제 권한이 없습니다.");
+        return;
+    }
+
+    if (!confirm("게시물을 삭제하시겠습니까?")) return;
+
+    db.posts =
+        db.posts.filter(p => p.id !== postId);
+
+    saveDB();
+
+    render();
+}
+
+/* =========================================================
+   COMMENT ACTIONS
+========================================================= */
+
+function addComment(postId) {
+
+    const user = getCurrentUser();
+
+    if (!user) {
+        openLogin();
+        return;
+    }
+
+    const input =
+        document.getElementById(
+            `comment-input-${postId}`
+        );
+
+    const text =
+        input.value.trim();
+
+    if (!text) return;
+
+    const post =
+        db.posts.find(p => p.id === postId);
+
+    if (!post) return;
+
+    post.comments = post.comments || [];
+
+    post.comments.push({
+        id: makeId("comment"),
+        authorId: user.id,
+        text,
+        likedBy: [],
+        pinned: false,
+        createdAt: Date.now()
+    });
+
+    saveDB();
+
+    render();
+}
+
+function toggleCommentLike(postId, commentId) {
+
+    const user = getCurrentUser();
+
+    if (!user) {
+        openLogin();
+        return;
+    }
+
+    const post =
+        db.posts.find(p => p.id === postId);
+
+    const comment =
+        post?.comments?.find(c => c.id === commentId);
+
+    if (!comment) return;
+
+    comment.likedBy =
+        comment.likedBy || [];
+
+    const index =
+        comment.likedBy.indexOf(user.id);
+
+    if (index === -1) {
+        comment.likedBy.push(user.id);
+    } else {
+        comment.likedBy.splice(index, 1);
+    }
+
+    saveDB();
+
+    render();
+}
+
+function togglePinComment(postId, commentId) {
+
+    if (!isManager()) {
+        alert("매니저만 사용할 수 있습니다.");
+        return;
+    }
+
+    const post =
+        db.posts.find(p => p.id === postId);
+
+    const comment =
+        post?.comments?.find(c => c.id === commentId);
+
+    if (!comment) return;
+
+    post.comments.forEach(c => {
+        c.pinned = false;
+    });
+
+    comment.pinned = !comment.pinned;
+
+    saveDB();
+
+    render();
+}
+
+function deleteComment(postId, commentId) {
+
+    if (!isManager()) return;
+
+    const post =
+        db.posts.find(p => p.id === postId);
+
+    if (!post) return;
+
+    post.comments =
+        post.comments.filter(c => c.id !== commentId);
+
+    saveDB();
+
+    render();
+}
+
+/* =========================================================
+   AUTH
+========================================================= */
+
+function openLogin() {
+
+    openModal(`
+        <h2>로그인</h2>
+
+        <div class="form-group">
+            <label>태그 이름</label>
+            <input
+                id="loginTag"
+                placeholder="@이름"
+                maxlength="30"
+            >
+        </div>
+
+        <div class="form-group">
+            <label>비밀번호</label>
+            <input
+                id="loginPassword"
+                type="password"
+                minlength="6"
+                maxlength="20"
+            >
+        </div>
+
+        <button
+            class="primary-btn"
+            onclick="login()">
+            로그인
+        </button>
+
+        <div class="auth-switch">
+            계정이 없나요?
+            <span
+                class="link"
+                onclick="openRegister()">
+                회원가입
+            </span>
+        </div>
+    `);
+}
+
+function openRegister() {
+
+    openModal(`
+        <h2>회원가입</h2>
+
+        <div class="form-group">
+            <label>이름</label>
+            <input
+                id="registerName"
+                maxlength="30"
+                placeholder="이름"
+            >
+        </div>
+
+        <div class="form-group">
+            <label>태그 이름</label>
+            <input
+                id="registerTag"
+                maxlength="30"
+                placeholder="@이름"
+            >
+        </div>
+
+        <div class="form-group">
+            <label>비밀번호</label>
+            <input
+                id="registerPassword"
+                type="password"
+                minlength="6"
+                maxlength="20"
+                placeholder="6~20자"
+            >
+        </div>
+
+        <small>
+            태그 이름은 반드시 @로 시작해야 하며
+            영문 대소문자를 구분하지 않습니다.
+        </small>
+
+        <br><br>
+
+        <button
+            class="primary-btn"
+            onclick="register()">
+            회원가입
+        </button>
+
+        <div class="auth-switch">
+            이미 계정이 있나요?
+            <span
+                class="link"
+                onclick="openLogin()">
+                로그인
+            </span>
+        </div>
+    `);
+}
+
+function normalizeTag(tag) {
+    return tag.trim().toLowerCase();
+}
+
+function register() {
+
+    const name =
+        document.getElementById("registerName")
+            .value.trim();
+
+    let tag =
+        document.getElementById("registerTag")
+            .value.trim();
+
+    const password =
+        document.getElementById("registerPassword")
+            .value;
+
+    if (!name) {
+        alert("이름을 입력해주세요.");
+        return;
+    }
+
+    if (!tag.startsWith("@")) {
+        alert("태그 이름은 반드시 @로 시작해야 합니다.");
+        return;
+    }
+
+    if (tag.length < 2) {
+        alert("태그 이름을 입력해주세요.");
+        return;
+    }
+
+    if (password.length < 6 || password.length > 20) {
+        alert("비밀번호는 6~20자여야 합니다.");
+        return;
+    }
+
+    const normalized =
+        normalizeTag(tag);
+
+    const duplicate =
+        db.users.some(
+            u => normalizeTag(u.tag) === normalized
+        );
+
+    if (duplicate) {
+        alert("이미 사용 중인 태그 이름입니다.");
+        return;
+    }
+
+    const user = {
+        id: makeId("user"),
+        name,
+        tag,
+        password,
+        role: "member",
+        followers: [],
+        totalVisitors: 0,
+        totalHearts: 0,
+        banned: false,
+        createdAt: Date.now()
+    };
+
+    db.users.push(user);
+
+    currentUserId = user.id;
+
+    localStorage.setItem(
+        "bluetalk_current_user",
+        currentUserId
+    );
+
+    saveDB();
+
+    closeModal();
+
+    render();
+
+    alert("회원가입이 완료되었습니다.");
+}
+
+function login() {
+
+    const tag =
+        document.getElementById("loginTag")
+            .value.trim();
+
+    const password =
+        document.getElementById("loginPassword")
+            .value;
+
+    const normalized =
+        normalizeTag(tag);
+
+    const user =
+        db.users.find(
+            u =>
+                normalizeTag(u.tag) === normalized &&
+                u.password === password
+        );
+
+    if (!user) {
+        alert("태그 이름 또는 비밀번호가 올바르지 않습니다.");
+        return;
+    }
+
+    if (user.banned) {
+        alert("추방된 회원입니다.");
+        return;
+    }
+
+    currentUserId = user.id;
+
+    localStorage.setItem(
+        "bluetalk_current_user",
+        currentUserId
+    );
+
+    closeModal();
+
+    render();
+}
+
+function logout() {
+
+    currentUserId = null;
+
+    localStorage.removeItem(
+        "bluetalk_current_user"
+    );
+
+    render();
+}
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+function showProfile() {
+
+    const user = getCurrentUser();
+
+    if (!user) {
+        openLogin();
+        return;
+    }
+
+    const posts =
+        db.posts.filter(p => p.authorId === user.id);
+
+    const totalHearts =
+        posts.reduce(
+            (sum, post) =>
+                sum + getPostHearts(post),
+            0
+        );
+
+    const visitors =
+        posts.reduce(
+            (sum, post) =>
+                sum + (post.visitors || 0),
+            0
+        );
+
+    openModal(`
+        <div class="profile-center">
+
+            <div class="profile-circle">
+                ${escapeHTML(user.name.charAt(0))}
+            </div>
+
+            <h2>
+                ${escapeHTML(user.name)}
+            </h2>
+
+            <div class="profile-tag">
+                ${escapeHTML(user.tag)}
+            </div>
+
+            <div class="stats">
+
+                <div>
+                    <div class="stat-number">
+                        ${user.followers.length}
+                    </div>
+                    <div class="stat-label">
+                        팔로워
+                    </div>
+                </div>
+
+                <div>
+                    <div class="stat-number">
+                        ${visitors}
+                    </div>
+                    <div class="stat-label">
+                        방문자 총합
+                    </div>
+                </div>
+
+                <div>
+                    <div class="stat-number">
+                        ${totalHearts}
+                    </div>
+                    <div class="stat-label">
+                        총 하트
+                    </div>
+                </div>
+
+            </div>
+
+            <br>
+
+            <button
+                class="outline-btn"
+                onclick="closeModal()">
+                닫기
+            </button>
+
+        </div>
+    `);
+}
+
+function renderMyProfileCard(user) {
+
+    const posts =
+        db.posts.filter(p => p.authorId === user.id);
+
+    const hearts =
+        posts.reduce(
+            (s,p) => s + getPostHearts(p),
+            0
+        );
+
+    const visitors =
+        posts.reduce(
+            (s,p) => s + (p.visitors || 0),
+            0
+        );
+
+    return `
+        <div class="card profile-center">
+
+            <div class="profile-circle">
+                ${escapeHTML(user.name.charAt(0))}
+            </div>
+
+            <div class="profile-name">
+                ${escapeHTML(user.name)}
+            </div>
+
+            <div class="profile-tag">
+                ${escapeHTML(user.tag)}
+            </div>
+
+            <div class="stats">
+
+                <div>
+                    <div class="stat-number">
+                        ${user.followers.length}
+                    </div>
+                    <div class="stat-label">
+                        팔로워
+                    </div>
+                </div>
+
+                <div>
+                    <div class="stat-number">
+                        ${visitors}
+                    </div>
+                    <div class="stat-label">
+                        방문자
+                    </div>
+                </div>
+
+                <div>
+                    <div class="stat-number">
+                        ${hearts}
+                    </div>
+                    <div class="stat-label">
+                        하트
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    `;
+}
+
+function renderLoginCard() {
+
+    return `
+        <div class="card blue-card">
+
+            <h3>
+                로그인
+            </h3>
+
+            <p>
+                로그인하면 좋아요, 공유,
+                팔로우를 사용할 수 있습니다.
+            </p>
+
+            <button
+                class="header-btn"
+                onclick="openLogin()">
+                로그인
+            </button>
+
+        </div>
+    `;
+}
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+function handleSearch(event) {
+
+    if (event.key !== "Enter") return;
+
+    const query =
+        event.target.value.trim();
+
+    if (!query) {
+        searchMode = null;
+        render();
+        return;
+    }
+
+    if (!query.startsWith("@")) {
+        alert("사람 검색은 @태그이름으로 해주세요.");
+        return;
+    }
+
+    searchMode = normalizeTag(query);
+
+    renderSearchResults();
+}
+
+function renderSearchResults() {
+
+    const results =
+        db.users.filter(
+            u =>
+                !u.banned &&
+                normalizeTag(u.tag) === searchMode
+        );
+
+    document.getElementById("app").innerHTML = `
+
+        <main>
+
+            <div class="card">
+
+                <h2>
+                    사람 검색
+                </h2>
+
+                <p>
+                    검색:
+                    ${escapeHTML(searchMode)}
+                </p>
+
+                ${
+                    results.length
+                    ? results.map(renderSearchUser).join("")
+                    : `
+                        <p>
+                            해당 태그의 사용자를 찾을 수 없습니다.
+                        </p>
+                    `
+                }
+
+            </div>
+
+        </main>
+    `;
+}
+
+function renderSearchUser(user) {
+
+    const current = getCurrentUser();
+
+    const following =
+        current &&
+        user.followers.includes(current.id);
+
+    return `
+        <div class="member-row">
+
+            <div style="display:flex;align-items:center;gap:10px">
+
+                <div class="small-avatar">
+                    ${escapeHTML(user.name.charAt(0))}
+                </div>
+
+                <div>
+
+                    <div>
+                        ${escapeHTML(user.name)}
+                    </div>
+
+                    <small>
+                        ${escapeHTML(user.tag)}
+                    </small>
+
+                </div>
+
+            </div>
+
+            <button
+                class="primary-btn"
+                onclick="followUser('${user.id}')">
+
+                ${following
+                    ? "팔로우 취소"
+                    : "팔로우"
+                }
+
+            </button>
+
+        </div>
+    `;
+}
+
+/* =========================================================
+   ADMIN
+========================================================= */
+
+function renderAdminShortcut() {
+
+    return `
+        <div class="card blue-card">
+
+            <h3>
+                매니저
+            </h3>
+
+            <button
+                class="header-btn"
+                onclick="openAdmin()">
+                관리자 페이지
+            </button>
+
+        </div>
+    `;
+}
+
+function openAdmin() {
+
+    if (!isManager()) {
+        alert("매니저만 접근할 수 있습니다.");
+        return;
+    }
+
+    openModal(`
+        <h2>매니저 관리</h2>
+
+        <div class="admin-panel">
+
+            <h3>
+                웹사이트 이름 변경
+            </h3>
+
+            <div class="admin-row">
+
+                <input
+                    id="newSiteName"
+                    value="${escapeHTML(db.settings.siteName)}"
+                >
+
+                <button
+                    class="primary-btn"
+                    onclick="changeSiteName()">
+                    변경
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="admin-panel">
+
+            <h3>
+                주제 관리
+            </h3>
+
+            <div class="admin-row">
+
+                <input
+                    id="newTopicName"
+                    placeholder="새 주제 이름"
+                >
+
+                <button
+                    class="primary-btn"
+                    onclick="addTopic()">
+                    추가
+                </button>
+
+            </div>
+
+            ${db.topics.map(topic => `
+
+                <div class="member-row">
+
+                    <div>
+                        <strong>
+                            ${escapeHTML(topic.name)}
+                        </strong>
+
+                        <br>
+
+                        <small>
+                            ${topic.active ? "활성화" : "비활성화"}
+                        </small>
+                    </div>
+
+                    <div>
+
+                        <button
+                            class="outline-btn"
+                            onclick="renameTopic('${topic.id}')">
+                            이름 변경
+                        </button>
+
+                        <button
+                            class="outline-btn"
+                            onclick="toggleTopic('${topic.id}')">
+
+                            ${topic.active
+                                ? "해제"
+                                : "활성화"
+                            }
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `).join("")}
+
+        </div>
+
+
+        <div class="admin-panel">
+
+            <h3>
+                회원 관리
+            </h3>
+
+            ${db.users.map(user => `
+
+                <div class="member-row">
+
+                    <div>
+
+                        <strong>
+                            ${escapeHTML(user.name)}
+                        </strong>
+
+                        <br>
+
+                        <small>
+                            ${escapeHTML(user.tag)}
+                        </small>
+
+                        <br>
+
+                        <small>
+                            권한:
+                            ${user.role}
+                        </small>
+
+                    </div>
+
+                    ${
+                        user.id !== currentUserId
+                        ? `
+                            <button
+                                class="danger-btn"
+                                onclick="banUser('${user.id}')">
+
+                                ${user.banned
+                                    ? "추방 해제"
+                                    : "회원 추방"
+                                }
+
+                            </button>
+                        `
+                        : `
+                            <small>
+                                현재 계정
+                            </small>
+                        `
+                    }
+
+                </div>
+
+            `).join("")}
+
+        </div>
+
+        <button
+            class="outline-btn"
+            onclick="closeModal()">
+            닫기
+        </button>
+    `);
+}
+
+function changeSiteName() {
+
+    if (!isManager()) return;
+
+    const name =
+        document.getElementById("newSiteName")
+            .value.trim();
+
+    if (!name) return;
+
+    db.settings.siteName = name;
+
+    saveDB();
+
+    closeModal();
+
+    render();
+}
+
+function addTopic() {
+
+    if (!isManager()) return;
+
+    const input =
+        document.getElementById("newTopicName");
+
+    const name =
+        input.value.trim();
+
+    if (!name) return;
+
+    db.topics.push({
+        id: makeId("topic"),
+        name,
+        active: true
+    });
+
+    saveDB();
+
+    openAdmin();
+}
+
+function renameTopic(topicId) {
+
+    if (!isManager()) return;
+
+    const topic =
+        db.topics.find(t => t.id === topicId);
+
+    if (!topic) return;
+
+    const newName =
+        prompt(
+            "새 주제 이름",
+            topic.name
+        );
+
+    if (!newName?.trim()) return;
+
+    topic.name = newName.trim();
+
+    saveDB();
+
+    openAdmin();
+
+    render();
+}
+
+function toggleTopic(topicId) {
+
+    if (!isManager()) return;
+
+    const topic =
+        db.topics.find(t => t.id === topicId);
+
+    if (!topic) return;
+
+    topic.active = !topic.active;
+
+    saveDB();
+
+    openAdmin();
+
+    render();
+}
+
+function banUser(userId) {
+
+    if (!isManager()) return;
+
+    const user =
+        db.users.find(u => u.id === userId);
+
+    if (!user) return;
+
+    if (!confirm(
+        `${user.name} (${user.tag}) 회원을 ${
+            user.banned ? "복귀" : "추방"
+        }하시겠습니까?`
+    )) {
+        return;
+    }
+
+    user.banned = !user.banned;
+
+    saveDB();
+
+    openAdmin();
+
+    render();
+}
+
+/* =========================================================
+   SORT / TOPIC
+========================================================= */
+
+function changeSort(mode) {
+
+    sortMode = mode;
+
+    render();
+}
+
+function selectTopic(topicId) {
+
+    currentTopic = topicId;
+
+    searchMode = null;
+
+    render();
+}
+
+function goHome() {
+
+    currentTopic = "all";
+    searchMode = null;
+
+    document.getElementById("searchInput").value = "";
+
+    render();
+}
+
+/* =========================================================
+   STATISTICS
+========================================================= */
+
+function getPostHearts(post) {
+
+    return post.likedBy?.length || 0;
+}
+
+function updateUserHeartTotals() {
+
+    db.users.forEach(user => {
+
+        user.totalHearts =
+            db.posts
+                .filter(p => p.authorId === user.id)
+                .reduce(
+                    (sum,p) =>
+                        sum + getPostHearts(p),
+                    0
+                );
+
+    });
+}
+
+function getTopUsers() {
+
+    const users =
+        [...db.users]
+            .filter(u => !u.banned)
+            .sort(
+                (a,b) =>
+                    (b.followers?.length || 0) -
+                    (a.followers?.length || 0)
+            )
+            .slice(0,5);
+
+    return users.map((user,index) => `
+
+        <div style="
+            display:flex;
+            align-items:center;
+            gap:8px;
+            margin-bottom:10px;
+        ">
+
+            <strong>
+                ${index + 1}
+            </strong>
+
+            <div
+                class="small-avatar"
+                style="width:35px;height:35px;font-size:14px">
+
+                ${escapeHTML(user.name.charAt(0))}
+
+            </div>
+
+            <div>
+
+                <div>
+                    ${escapeHTML(user.name)}
+                </div>
+
+                <small>
+                    ${escapeHTML(user.tag)}
+                </small>
+
+            </div>
+
+        </div>
+
+    `).join("");
+}
+
+/* =========================================================
+   VISITOR COUNT
+========================================================= */
+
+function countPostVisitor(postId) {
+
+    const post =
+        db.posts.find(p => p.id === postId);
+
+    const user =
+        getCurrentUser();
+
+    if (!post || !user) return;
+
+    if (!post.visitorIds) {
+        post.visitorIds = [];
+    }
+
+    if (!post.visitorIds.includes(user.id)) {
+
+        post.visitorIds.push(user.id);
+
+        post.visitors =
+            post.visitorIds.length;
+
+        const author =
+            db.users.find(u => u.id === post.authorId);
+
+        if (author) {
+            author.totalVisitors =
+                (author.totalVisitors || 0) + 1;
+        }
+
+        saveDB();
+    }
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+function openModal(content) {
+
+    document.getElementById("modalContent")
+        .innerHTML = content;
+
+    document.getElementById("modalBg")
+        .classList.remove("hidden");
+}
+
+function closeModal() {
+
+    document.getElementById("modalBg")
+        .classList.add("hidden");
+}
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function formatDate(timestamp) {
+
+    const date =
+        new Date(timestamp);
+
+    return date.toLocaleString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+}
+
+function readFileAsDataURL(file) {
+
+    return new Promise((resolve,reject) => {
+
+        const reader =
+            new FileReader();
+
+        reader.onload =
+            () => resolve(reader.result);
+
+        reader.onerror =
+            reject;
+
+        reader.readAsDataURL(file);
+    });
+}
+
+/* =========================================================
+   POST VISITOR OBSERVER
+========================================================= */
+
+document.addEventListener("click", function(event) {
+
+    const post =
+        event.target.closest(".post");
+
+    if (!post) return;
+
+    const articleId =
+        post.querySelector(".action-btn")
+            ?.getAttribute("onclick")
+            ?.match(/'([^']+)'/)?.[1];
+
+    if (articleId) {
+        countPostVisitor(articleId);
+    }
+
+});
+
+/* =========================================================
+   LOGIN STATE CHECK
+========================================================= */
+
+function checkLoginState() {
+
+    if (currentUserId) {
+
+        const user =
+            db.users.find(
+                u => u.id === currentUserId
+            );
+
+        if (!user || user.banned) {
+
+            currentUserId = null;
+
+            localStorage.removeItem(
+                "bluetalk_current_user"
+            );
+        }
+    }
+
+    render();
+}
+
+/* =========================================================
+   KEYBOARD / MODAL
+========================================================= */
+
+document.getElementById("modalBg")
+    .addEventListener("click", function(e) {
+
+        if (e.target === this) {
+            closeModal();
+        }
+
+    });
+
+document.addEventListener("keydown", function(e) {
+
+    if (e.key === "Escape") {
+        closeModal();
+    }
+
+});
+
+/* =========================================================
+   START
+========================================================= */
+
+checkLoginState();
+
+</script>
+
+</body>
+</html>
