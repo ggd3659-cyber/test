@@ -839,7 +839,57 @@ function render() {
     renderHome();
 }
 
-function renderHome() {
+async function loadPostsFromServer() {
+    try {
+        const params = new URLSearchParams();
+
+        if (currentTopic !== "all") {
+            params.set("topic", currentTopic);
+        }
+
+        if (sortMode) {
+            params.set("sort", sortMode);
+        }
+
+        const response = await fetch(
+            "/api/posts?" + params.toString()
+        );
+
+        if (!response.ok) {
+            throw new Error("게시물을 불러오지 못했습니다.");
+        }
+
+        const posts = await response.json();
+
+        // PostgreSQL 형식 → 기존 화면에서 사용하는 형식으로 변환
+        db.posts = posts.map(post => ({
+            id: post.id,
+            authorId: post.user_id,
+            topicId: post.topic_id,
+            text: post.text,
+            imagePath: post.image_path,
+            videoPath: post.video_path,
+            visitors: Number(post.visitors || 0),
+            createdAt: Number(post.created_at),
+            updatedAt: Number(post.updated_at),
+
+            authorName: post.author_name,
+            authorTag: post.author_tag,
+            authorRole: post.author_role,
+
+            topicName: post.topic_name,
+
+            heartCount: Number(post.heart_count || 0),
+            commentCount: Number(post.comment_count || 0)
+        }));
+
+        renderHomeOnly();
+
+    } catch (error) {
+        console.error("게시물 불러오기 오류:", error);
+    }
+}
+function renderHomeOnly() {
 
     const user = getCurrentUser();
 
@@ -866,6 +916,9 @@ function renderHome() {
             (b.visitors || 0) - (a.visitors || 0)
         );
     }
+function renderHome() {
+    loadPostsFromServer();
+}
 
     let html = `
         <main>
