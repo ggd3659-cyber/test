@@ -890,7 +890,7 @@ async function loadPostsFromServer() {
             heartCount: Number(post.heart_count || 0),
             commentCount: Number(post.comment_count || 0)
         }));
-
+console.log("db.posts after loading:", db.posts);
         renderHomeOnly();
 
     } catch (error) {
