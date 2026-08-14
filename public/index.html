@@ -1466,7 +1466,7 @@ function focusComment(postId) {
    POST ACTIONS
 ========================================================= */
 
-function createPost() {
+async function createPost() {
 
     const user = getCurrentUser();
 
@@ -1493,48 +1493,68 @@ function createPost() {
     const videoFile =
         document.getElementById("postVideo").files[0];
 
-    const post = {
-        id: makeId("post"),
-        authorId: user.id,
-        topicId,
-        text,
-        image: null,
-        video: null,
-        likedBy: [],
-        comments: [],
-        visitors: 0,
-        createdAt: Date.now()
-    };
+    try {
 
-    const files = [];
+        const formData = new FormData();
 
-    if (imageFile) {
-        files.push(
-            readFileAsDataURL(imageFile)
-                .then(data => post.image = data)
+        formData.append("text", text);
+        formData.append("topicId", topicId);
+
+        if (imageFile) {
+            formData.append("image", imageFile);
+        }
+
+        if (videoFile) {
+            formData.append("video", videoFile);
+        }
+
+        const response = await fetch(
+            "/api/posts",
+            {
+                method: "POST",
+                body: formData
+            }
         );
-    }
 
-    if (videoFile) {
-        files.push(
-            readFileAsDataURL(videoFile)
-                .then(data => post.video = data)
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                result.error ||
+                "게시물 작성에 실패했습니다."
+            );
+        }
+
+        console.log(
+            "게시물 작성 성공:",
+            result
         );
-    }
 
-    Promise.all(files).then(() => {
+        // 작성 폼 초기화
+        document.getElementById("postText").value = "";
 
-        db.posts.push(post);
+        document.getElementById("postImage").value = "";
 
-        saveDB();
+        document.getElementById("postVideo").value = "";
 
-        render();
+        // PostgreSQL에서 최신 게시물 다시 가져오기
+        await loadPostsFromServer();
 
         alert("게시물이 작성되었습니다.");
 
-    });
-}
+    } catch (error) {
 
+        console.error(
+            "게시물 작성 실패:",
+            error
+        );
+
+        alert(
+            "게시물 작성에 실패했습니다.\n" +
+            error.message
+        );
+    }
+}
 function togglePostLike(postId) {
 
     const user = getCurrentUser();
