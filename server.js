@@ -8,6 +8,20 @@ const fs = require("fs");
 
 const app = express();
 
+app.set("trust proxy", 1);
+
+app.use(session({
+    secret: process.env.SESSION_SECRET || "bluetalk-session-secret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
+}));
+
 /* =========================
    BASIC SETTINGS
 ========================= */
