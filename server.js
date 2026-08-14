@@ -761,7 +761,198 @@ app.get("/api/posts", async (req, res, next) => {
         next(error);
     }
 });
+/* =========================
+   CREATE POST
+========================= */
 
+app.post(
+    "/api/posts",
+    upload.fields([
+        {
+            name: "image",
+            maxCount: 1
+        },
+        {
+            name: "video",
+            maxCount: 1
+        }
+    ]),
+    async (req, res, next) => {
+
+        try {
+
+            const sessionUserId =
+                req.session.userId;
+
+            if (!sessionUserId) {
+                return res.status(401).json({
+                    error: "로그인이 필요합니다."
+                });
+            }
+
+            const userId =
+                Number(sessionUserId);
+
+            if (!Number.isInteger(userId)) {
+                return res.status(401).json({
+                    error: "로그인 정보가 올바르지 않습니다."
+                });
+            }
+
+            // 여기부터 게시물 저장 코드
+            /* 사용자 확인 */
+
+            const userResult = await query(
+                `
+                SELECT
+                    id,
+                    name,
+                    tag,
+                    role,
+                    banned
+                FROM users
+                WHERE id = $1
+                `,
+                [userId]
+            );
+
+            if (userResult.rows.length === 0) {
+                return res.status(401).json({
+                    error: "사용자를 찾을 수 없습니다."
+                });
+            }
+
+            const user =
+                userResult.rows[0];
+
+            if (Number(user.banned) === 1) {
+                return res.status(403).json({
+                    error: "정지된 계정입니다."
+                });
+            }
+
+            /* 게시물 내용 */
+
+            const text =
+                String(req.body.text || "").trim();
+
+            if (!text) {
+                return res.status(400).json({
+                    error: "게시물 내용을 입력해주세요."
+                });
+            }
+
+            /* 주제 */
+
+            const topicId =
+                Number(req.body.topicId);
+
+            if (!Number.isInteger(topicId)) {
+                return res.status(400).json({
+                    error: "올바른 게시물 주제가 아닙니다."
+                });
+            }
+
+            /* 주제 존재 여부 확인 */
+
+            const topicResult = await query(
+                `
+                SELECT id
+                FROM topics
+                WHERE id = $1
+                  AND active = 1
+                `,
+                [topicId]
+            );
+
+            if (topicResult.rows.length === 0) {
+                return res.status(400).json({
+                    error: "존재하지 않는 게시물 주제입니다."
+                });
+            }
+
+            /* 파일 경로 */
+
+            let imagePath = null;
+            let videoPath = null;
+
+            if (
+                req.files &&
+                req.files.image &&
+                req.files.image[0]
+            ) {
+                imagePath =
+                    "/uploads/" +
+                    req.files.image[0].filename;
+            }
+
+            if (
+                req.files &&
+                req.files.video &&
+                req.files.video[0]
+            ) {
+                videoPath =
+                    "/uploads/" +
+                    req.files.video[0].filename;
+            }
+
+            const timestamp =
+                Date.now();
+
+            /* PostgreSQL에 게시물 저장 */
+
+            const result = await query(
+                `
+                INSERT INTO posts (
+                    user_id,
+                    topic_id,
+                    text,
+                    image_path,
+                    video_path,
+                    visitors,
+                    created_at,
+                    updated_at
+                )
+                VALUES (
+                    $1,
+                    $2,
+                    $3,
+                    $4,
+                    $5,
+                    $6,
+                    $7,
+                    $8
+                )
+                RETURNING id
+                `,
+                [
+                    userId,
+                    topicId,
+                    text,
+                    imagePath,
+                    videoPath,
+                    0,
+                    timestamp,
+                    timestamp
+                ]
+            );
+
+            res.json({
+                success: true,
+                postId: result.rows[0].id
+            });
+
+        } catch (error) {
+
+            console.error(
+                "CREATE POST ERROR:",
+                error
+            );
+
+            next(error);
+        }
+    }
+);
 /* =========================
    CREATE POST
 ========================= */
