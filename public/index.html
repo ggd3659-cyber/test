@@ -1158,7 +1158,7 @@ function renderComposer() {
 function renderPost(post) {
 
     const author = {
-        id: post.authorId,
+        id: Number(post.authorId),
         name: post.authorName || "알 수 없는 사용자",
         tag: post.authorTag || "",
         role: post.authorRole || "member",
@@ -1168,26 +1168,16 @@ function renderPost(post) {
 
     const user = getCurrentUser();
 
-    const topic = db.topics.find(
-        t => Number(t.id) === Number(post.topicId)
-    );
+    const topic = {
+        id: Number(post.topicId),
+        name: post.topicName || ""
+    };
 
     const liked =
         user &&
         (post.likedBy || []).includes(user.id);
 
-    const following =
-        false;
-
-    const topic = db.topics.find(t => t.id === post.topicId);
-
-    const liked =
-        user &&
-        (post.likedBy || []).includes(user.id);
-
-    const following =
-        user &&
-        (author.followers || []).includes(user.id);
+    const following = false;
 
     return `
         <article class="post">
@@ -2106,7 +2096,7 @@ function showProfile() {
     const totalHearts =
         posts.reduce(
             (sum, post) =>
-                sum + getPostHearts(post),
+                sum + post.heartCount || 0,
             0
         );
 
