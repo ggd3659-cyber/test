@@ -22,6 +22,13 @@ app.use(session({
     }
 }));
 
+app.get("/api/session-test", (req, res) => {
+    res.json({
+        sessionExists: !!req.session,
+        userId: req.session?.userId || null
+    });
+});
+
 /* =========================
    BASIC SETTINGS
 ========================= */
