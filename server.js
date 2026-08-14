@@ -581,13 +581,20 @@ app.post("/api/auth/register", async (req, res, next) => {
             ]
         );
 
-        req.session.userId =
-            result.rows[0].id;
+req.session.userId =
+    result.rows[0].id;
 
-        res.json({
-            success: true
-        });
+req.session.save((err) => {
 
+    if (err) {
+        return next(err);
+    }
+
+    res.json({
+        success: true
+    });
+
+});
     } catch (error) {
         next(error);
     }
@@ -644,11 +651,19 @@ app.post("/api/auth/login", async (req, res, next) => {
             });
         }
 
-        req.session.userId = user.id;
+     req.session.userId = user.id;
 
-        res.json({
-            success: true
-        });
+req.session.save((err) => {
+
+    if (err) {
+        return next(err);
+    }
+
+    res.json({
+        success: true
+    });
+
+});
 
     } catch (error) {
         next(error);
