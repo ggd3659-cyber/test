@@ -11,24 +11,38 @@ const app = express();
 app.set("trust proxy", 1);
 
 app.use(session({
-    secret: process.env.SESSION_SECRET || "bluetalk-session-secret",
+    secret:
+        process.env.SESSION_SECRET ||
+        "bluetalk-session-secret",
+
     resave: false,
+
     saveUninitialized: false,
+
     cookie: {
         httpOnly: true,
         secure: true,
         sameSite: "lax",
-        maxAge: 1000 * 60 * 60 * 24 * 7
+        maxAge:
+            1000 * 60 * 60 * 24 * 7
     }
 }));
 
 app.get("/api/session-test", (req, res) => {
-    res.json({
-        sessionExists: !!req.session,
-        userId: req.session?.userId || null
-    });
-});
 
+    res.json({
+        sessionId: req.sessionID,
+
+        sessionExists:
+            !!req.session,
+
+        userId:
+            req.session.userId || null,
+
+        session: req.session
+    });
+
+});
 /* =========================
    BASIC SETTINGS
 ========================= */
@@ -651,25 +665,36 @@ app.post("/api/auth/login", async (req, res, next) => {
             });
         }
 
-     req.session.userId = user.id;
+req.session.userId = user.id;
+
+console.log(
+    "LOGIN SESSION:",
+    req.sessionID,
+    req.session.userId
+);
 
 req.session.save((err) => {
 
     if (err) {
+        console.error(
+            "SESSION SAVE ERROR:",
+            err
+        );
+
         return next(err);
     }
+
+    console.log(
+        "SESSION SAVED:",
+        req.sessionID,
+        req.session.userId
+    );
 
     res.json({
         success: true
     });
 
 });
-
-    } catch (error) {
-        next(error);
-    }
-});
-
 /* =========================
    LOGOUT
 ========================= */
