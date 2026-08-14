@@ -37,9 +37,7 @@ app.get("/api/session-test", (req, res) => {
             !!req.session,
 
         userId:
-            req.session.userId || null,
-
-        session: req.session
+            req.session.userId || null
     });
 
 });
@@ -2147,19 +2145,15 @@ app.use((error, req, res, next) => {
     });
 });
 
+
 /* =========================
-   START SERVER
+   TEST INSERT
 ========================= */
 
-async function startServer() {
-
-    try {
-
-        await initializeDatabase();
-
-        await pool.query("SELECT 1");
 app.get("/api/test-insert", async (req, res) => {
+
     try {
+
         const userResult = await query(`
             SELECT id
             FROM users
@@ -2176,24 +2170,34 @@ app.get("/api/test-insert", async (req, res) => {
         `);
 
         if (userResult.rows.length === 0) {
+
             return res.status(400).json({
                 success: false,
                 error: "users 테이블에 사용자가 없습니다."
             });
+
         }
 
         if (topicResult.rows.length === 0) {
+
             return res.status(400).json({
                 success: false,
                 error: "topics 테이블에 주제가 없습니다."
             });
+
         }
 
-        const userId = userResult.rows[0].id;
-        const topicId = topicResult.rows[0].id;
-        const timestamp = now();
+        const userId =
+            userResult.rows[0].id;
 
-        const result = await query(`
+        const topicId =
+            topicResult.rows[0].id;
+
+        const timestamp =
+            now();
+
+        const result = await query(
+            `
             INSERT INTO posts
             (
                 user_id,
@@ -2207,34 +2211,52 @@ app.get("/api/test-insert", async (req, res) => {
             )
             VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
             RETURNING id
-        `, [
-            userId,
-            topicId,
-            "PostgreSQL 테스트 게시물",
-            null,
-            null,
-            0,
-            timestamp,
-            timestamp
-        ]);
+            `,
+            [
+                userId,
+                topicId,
+                "PostgreSQL 테스트 게시물",
+                null,
+                null,
+                0,
+                timestamp,
+                timestamp
+            ]
+        );
 
         res.json({
             success: true,
-            postId: result.rows[0].id
+            postId:
+                result.rows[0].id
         });
 
     } catch (error) {
-        console.error("TEST INSERT ERROR:", error);
+
+        console.error(
+            "TEST INSERT ERROR:",
+            error
+        );
 
         res.status(500).json({
             success: false,
-            error: error.message
+            error:
+                error.message
         });
+
     }
+
 });
+
+
+/* =========================
+   TEST POSTS
+========================= */
+
 app.get("/api/test-posts", async (req, res) => {
+
     try {
-        const result = await pool.query(`
+
+        const result = await query(`
             SELECT
                 id,
                 user_id,
@@ -2249,35 +2271,65 @@ app.get("/api/test-posts", async (req, res) => {
 
         res.json({
             success: true,
-            count: result.rows.length,
-            posts: result.rows
+            count:
+                result.rows.length,
+            posts:
+                result.rows
         });
 
     } catch (error) {
-        console.error("TEST POSTS ERROR:", error);
+
+        console.error(
+            "TEST POSTS ERROR:",
+            error
+        );
 
         res.status(500).json({
             success: false,
-            error: error.message
+            error:
+                error.message
         });
+
     }
+
 });
+
+
+/* =========================
+   START SERVER
+========================= */
+
+async function startServer() {
+
+    try {
+
+        await initializeDatabase();
+
+        await pool.query(
+            "SELECT 1"
+        );
+
         app.listen(PORT, () => {
 
             console.log("");
             console.log("================================");
             console.log(" BlueTalk Server");
             console.log("================================");
+
             console.log(
                 `Port: ${PORT}`
             );
+
             console.log(
                 "PostgreSQL: Connected"
             );
+
             console.log("");
+
             console.log("Manager account");
             console.log("Tag: @admin");
             console.log("Password: admin123");
+
             console.log("================================");
             console.log("");
 
@@ -2287,13 +2339,19 @@ app.get("/api/test-posts", async (req, res) => {
 
         console.error("");
         console.error("================================");
-        console.error(" BlueTalk startup failed");
+        console.error(
+            " BlueTalk startup failed"
+        );
         console.error("================================");
+
         console.error(error);
+
         console.error("");
 
         process.exit(1);
+
     }
+
 }
 
 startServer();
