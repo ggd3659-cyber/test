@@ -1154,11 +1154,27 @@ function renderComposer() {
 
 function renderPost(post) {
 
-    const author = db.users.find(u => u.id === post.authorId);
-
-    if (!author || author.banned) return "";
+    const author = {
+        id: post.authorId,
+        name: post.authorName || "알 수 없는 사용자",
+        tag: post.authorTag || "",
+        role: post.authorRole || "member",
+        banned: false,
+        followers: []
+    };
 
     const user = getCurrentUser();
+
+    const topic = db.topics.find(
+        t => Number(t.id) === Number(post.topicId)
+    );
+
+    const liked =
+        user &&
+        (post.likedBy || []).includes(user.id);
+
+    const following =
+        false;
 
     const topic = db.topics.find(t => t.id === post.topicId);
 
@@ -1226,11 +1242,11 @@ function renderPost(post) {
             </div>
 
             ${
-                post.image
+                post.imagePath
                 ? `
                     <img
                         class="post-media"
-                        src="${post.image}"
+                        src="${post.imagePath}"
                         alt="게시물 사진"
                     >
                 `
@@ -1238,11 +1254,11 @@ function renderPost(post) {
             }
 
             ${
-                post.video
+                post.videoPath
                 ? `
                     <video
                         class="post-media"
-                        src="${post.video}"
+                        src="${post.videoPath}"
                         controls>
                     </video>
                 `
@@ -1257,7 +1273,7 @@ function renderPost(post) {
 
                     <span class="heart-icon">♥</span>
 
-                    하트 ${getPostHearts(post)}
+                    하트 ${post.heartCount || 0}
 
                 </button>
 
