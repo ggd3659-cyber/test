@@ -2044,7 +2044,7 @@ function register() {
     alert("회원가입이 완료되었습니다.");
 }
 
-function login() {
+async function login() {
 
     const tag =
         document.getElementById("loginTag")
@@ -2054,49 +2054,67 @@ function login() {
         document.getElementById("loginPassword")
             .value;
 
-    const normalized =
-        normalizeTag(tag);
+    if (!tag || !password) {
+        alert("태그 이름과 비밀번호를 입력해주세요.");
+        return;
+    }
 
-    const user =
-        db.users.find(
-            u =>
-                normalizeTag(u.tag) === normalized &&
-                u.password === password
+    try {
+
+        const response = await fetch(
+            "/api/auth/login",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    tag: tag,
+                    password: password
+                })
+            }
         );
 
-    if (!user) {
-        alert("태그 이름 또는 비밀번호가 올바르지 않습니다.");
-        return;
+        const result =
+            await response.json();
+
+        if (!response.ok) {
+            alert(
+                result.error ||
+                "로그인에 실패했습니다."
+            );
+            return;
+        }
+
+        /*
+         * 서버 세션 로그인 성공
+         */
+
+        closeModal();
+
+        /*
+         * 서버에서 현재 로그인한 사용자 가져오기
+         */
+        await loadCurrentUserFromServer();
+
+        /*
+         * 게시물 다시 불러오기
+         */
+        await loadPostsFromServer();
+
+    } catch (error) {
+
+        console.error(
+            "로그인 오류:",
+            error
+        );
+
+        alert(
+            "서버와 연결할 수 없습니다."
+        );
     }
-
-    if (user.banned) {
-        alert("추방된 회원입니다.");
-        return;
-    }
-
-    currentUserId = user.id;
-
-    localStorage.setItem(
-        "bluetalk_current_user",
-        currentUserId
-    );
-
-    closeModal();
-
-    render();
 }
-
-function logout() {
-
-    currentUserId = null;
-
-    localStorage.removeItem(
-        "bluetalk_current_user"
-    );
-
-    render();
-}
-
 /* =========================================================
    PROFILE
 ========================================================= */
@@ -2965,6 +2983,48 @@ document.addEventListener("keydown", function(e) {
 
 });
 
+   async function loadCurrentUserFromServer() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/auth/me",
+                {
+                    credentials: "include"
+                }
+            );
+
+        if (!response.ok) {
+            return null;
+        }
+
+        const user =
+            await response.json();
+
+        if (!user) {
+            return null;
+        }
+
+        /*
+         * 기존 프론트 코드와 호환시키기 위해
+         * currentUserId를 유지
+         */
+        currentUserId =
+            Number(user.id);
+
+        return user;
+
+    } catch (error) {
+
+        console.error(
+            "현재 사용자 확인 실패:",
+            error
+        );
+
+        return null;
+    }
+}
 /* =========================================================
    START
 ========================================================= */
