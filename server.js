@@ -611,10 +611,7 @@ req.session.save((err) => {
         next(error);
     }
 });
-    } catch (error) {
-        next(error);
-    }
-});
+
 /* =========================
    LOGIN
 ========================= */
